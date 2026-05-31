@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="cursor.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .grand-container {
+            display: flex;
+            width: 100vw;
+            justify-content: center;
+        }
+
+        .left-sidebar {
+            display: flex;
+            width: 25vw;
+            height: 100vh;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .center {
+            display: flex;
+            flex-direction: column;
+            width: 51vw;
+            height: auto;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .right-sidebar {
+            display: flex;
+            flex-direction: column;
+            width: 24vw;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+
+        body {
+            background-image: url("pics/sega_bg.png");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center center;
+        }
+
+        .zoom-resist-small {
+            width: 15vw;
+            height: auto;
+        }
+
+        .zoom-resist-medium {
+            width: 20vw;
+            height: auto;
+        }
+
+        .zoom-resist-large {
+            width: 25vw;
+            height: auto;
+        }
+
+        .bougie-text {
+            --bg-size: 400%;
+            background: linear-gradient(90deg,
+                    red,
+                    orange,
+                    yellow,
+                    green,
+                    blue,
+                    indigo,
+                    violet,
+                    red,
+                    orange,
+                    yellow,
+                    green,
+                    blue,
+                    indigo,
+                    violet) 0 0 / var(--bg-size) 100%;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: move-bg 20s infinite linear;
+        }
+
+        #picker {
+            margin-bottom: 1em;
+            color: rgb(56, 255, 17);
+            font-weight: 1000;
+            background-color: rgba(68, 68, 68, 0.5); 
+        }
+
+        .hidden {
+            display: none;
+        }
+        
+        #game {
+            width: 100%;
+            max-width: 640px;
+            aspect-ratio: 4 / 3;
+            height: auto;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #game canvas {
+            display: block !important;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        input[type="file"] { font-size: 1rem; padding: 0.4em; }
+
+        @keyframes move-bg {
+            to {
+                background-position: var(--bg-size) 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" style="position: absolute; left: 0vw; top: 75vh"></div>
+
+    <div class="grand-container">
+        <a href="https://gurencodes.com"><span style="font-size: 4rem; position: fixed; top: 0px; left: 10px; font-weight: 500;"
+            class="bougie-text">Home</span></a>
+        <div class="left-sidebar">
+            <img class="zoom-resist-small" src="pics/sonic1.gif">
+            <img class="zoom-resist-small" src="pics/nights1.gif">
+            <img class="zoom-resist-small" src="pics/ristar1.gif">
+        </div>
+
+        <div class="center">
+            <img class="zoom-resist-large" src="pics/sega1.gif">
+            <!-- This right here is the div in which the EmulatorJS game runs: -->
+
+            <div id="picker">
+                <h2>Mega Drive Emulator</h2>
+                <p>Select a ROM file (.md, .bin, .gen, .zip) from your computer:</p>
+                <input type="file" id="romInput" accept=".md,.bin,.gen,.zip">
+            </div>
+
+            <div id="game" class="hidden"></div>
+
+            <script>
+            document.getElementById('romInput').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const url = URL.createObjectURL(file);
+
+                document.getElementById('picker').style.display = 'none';
+                document.getElementById('game').classList.remove('hidden');
+
+                EJS_player = "#game";
+                EJS_core = "segaMD";
+                EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
+                EJS_gameUrl = url;
+                EJS_gameName = file.name;
+                EJS_startOnLoaded = true;
+
+                const script = document.createElement('script');
+                script.src = "https://cdn.emulatorjs.org/stable/data/loader.js";
+                document.body.appendChild(script);
+            });
+            </script>
+
+            <img class="zoom-resist-large" src="pics/miku1.gif">
+
+            <div style="border: 10px outset rgb(4, 136, 188); background-color: #D3D3D3; text-align: center;">
+                <p class="p-2 m-2">I'm ripping off <a href="https://voupie.lol/segashrine">voupie.lol</a> again, but I'm
+                    doing
+                    it
+                    to learn,
+                    soooooo... it's OK,
+                    right? Anyways,
+                    I've been a massive Sega fan all my life. I feel like I'm one of the biggest Sega fans out there. I
+                    owned a Japanese Mega Drive. My dream is to do the stream that <a
+                        href="https://www.twitch.tv/sharpie">Sharpie</a> does where he's played
+                    through every single Sega game on the Master System, Mega Drive, Game Gear, Saturn, Dreamcast, etc.
+                </p>
+
+                <p>As a challenge to myself, I set up an emulator in this webpage, that can run Sega Mega Drive games. This is only as a proof of concept, and I figure since no ROM is provided, this is not copyright infringement. At least not for the ROM.</p>
+
+                <p>I've also attached a Webamp thing of my 10 approximate favorite Sega Genesis songs. This one is
+                    hard, I think the Japanese composers for these games were geniuses.
+                </p>
+
+            </div>
+            <div class="mt-5">
+                <img class="zoom-resist-medium" src="pics/game1.gif">
+                <img class="zoom-resist-medium" src="pics/game2.gif">
+            </div>
+        </div>
+
+        <div class="right-sidebar">
+            <img class="zoom-resist-small" src="pics/sonic1.gif">
+            <img class="zoom-resist-small" src="pics/nights1.gif">
+            <img class="zoom-resist-small" src="pics/ristar1.gif">
+        </div>
+
+    </div>
+
+
+    <!-- These two script tags are for Webamp. -->
+    <script src="https://unpkg.com/webamp@1.4.2/built/webamp.bundle.min.js"></script>
+    <script src="webampsituation.js"></script>
+</body>
+
+</html>
